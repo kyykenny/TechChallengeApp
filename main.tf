@@ -2,13 +2,15 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.0"
+      version = "~> 3.27"
     }
   }
 }
 
 provider "aws" {
   region = "ap-southeast-2"
+  shared_credentials_file = "/home/ec2-user/.aws/credentials"
+  profile = "default"
 }
 
 resource "aws_vpc" "default-vpc" {
