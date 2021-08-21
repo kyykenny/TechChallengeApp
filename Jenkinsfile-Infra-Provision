@@ -1,0 +1,26 @@
+pipeline {   
+    agent any
+
+    stages {
+        stage('Terraform init & plan') {
+            steps {
+                sh 'terraform init'
+                sh 'terraform plan '
+            }
+        }
+        stage('approval') {
+            options {
+                timeout(time: 1, unit: 'HOURS') 
+            }
+            steps {
+                input 'approve the plan to proceed and apply'
+            }
+        }
+        stage('apply') {
+            steps {
+                sh 'terraform apply -input=false'
+                cleanWs()
+            }
+    }
+  }
+}

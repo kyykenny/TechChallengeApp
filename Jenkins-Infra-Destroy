@@ -1,0 +1,25 @@
+pipeline {   
+    agent any
+
+    stages {
+        stage('Terraform plan destroy') {
+            steps {
+                sh 'terraform plan -destroy'
+            }
+        }
+        stage('approval') {
+            options {
+                timeout(time: 1, unit: 'HOURS') 
+            }
+            steps {
+                input 'approve the plan to proceed and apply'
+            }
+        }
+        stage('apply') {
+            steps {
+                sh 'terraform apply -destroy -input=false'
+                cleanWs()
+            }
+    }
+  }
+}
