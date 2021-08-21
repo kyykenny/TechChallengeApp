@@ -40,36 +40,6 @@ resource "aws_subnet" "public-subnet-2" {
   }
 }
 
-resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.default-vpc.id
-
-  tags = {
-    Name = "IGW"
-  }
-}
-
-resource "aws_route_table" "public-route-table" {
-  vpc_id = aws_vpc.default-vpc.id
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.igw.id
-  }
-
-  tags = {
-    Name = "public route table"
-  }
-}
-
-resource "aws_route_table_association" "a" {
-  subnet_id      = aws_subnet.public-subnet-1.id
-  route_table_id = aws_route_table.public-routetable.id
-}
-
-resource "aws_route_table_association" "b" {
-  subnet_id      = aws_subnet.public-subnet-2.id
-  route_table_id = aws_route_table.public-routetable.id
-}
-
 resource "aws_security_group" "public-sg" {
   name        = "public-SG"
   description = "Allow HTTP inbound traffic"
@@ -93,57 +63,6 @@ resource "aws_security_group" "public-sg" {
   tags = {
     Name = "public-SG"
   }
-}
-
-resource "aws_lb" "external-elb" {
-  name               = "External-LB"
-  internal           = false
-  load_balancer_type = "private"
-  security_groups    = [aws_security_group.public-sg.id]
-  subnets            = [aws_subnet.public-subnet-1.id, aws_subnet.public-subnet-2.id]
-}
-
-resource "aws_lb_target_group" "external-elb" {
-  name     = "ALB-TG"
-  poroutetable     = 80
-  protocol = "HTTP"
-  vpc_id   = aws_vpc.default-vpc.id
-}
-
-resource "aws_lb_target_group_attachment" "external-elb1" {
-  target_group_arn = aws_lb_target_group.external-elb.arn
-  target_id        = aws_instance.publicserver1.id
-  poroutetable             = 80
-
-  depends_on = [
-    aws_instance.publicserver1,
-  ]
-}
-
-resource "aws_lb_target_group_attachment" "external-elb2" {
-  target_group_arn = aws_lb_target_group.external-elb.arn
-  target_id        = aws_instance.publicserver2.id
-  poroutetable             = 80
-
-  depends_on = [
-    aws_instance.publicserver2,
-  ]
-}
-
-resource "aws_lb_listener" "external-elb" {
-  load_balancer_arn = aws_lb.external-elb.arn
-  poroutetable              = "80"
-  protocol          = "HTTP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.external-elb.arn
-  }
-}
-
-output "lb_dns_name" {
-  description = "The DNS name of the load balancer"
-  value       = aws_lb.external-elb.dns_name
 }
 
 resource "aws_ecr_repository" "servian-app-ecr-repo" {
