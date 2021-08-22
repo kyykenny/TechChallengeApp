@@ -6,6 +6,7 @@ pipeline{
         stage('Terraform init & plan') {
             steps {
                 sh 'terraform init'
+                sh 'terraform import -lock=false aws_ecr_repository.servian-app-ecr-repo servian-app-ecr-repo'
                 sh 'terraform plan '
             }
         }
