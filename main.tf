@@ -196,6 +196,9 @@ resource "aws_ecs_service" "servian-app-service" {
 
 
 resource "aws_security_group" "service_security_group" {
+  name          = "service_security_group"
+  description   = "security group for ecs service"
+  vpc_id        = "${aws_vpc.default-vpc.id}"
   ingress {
     from_port = 0
     to_port   = 0
