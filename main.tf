@@ -143,7 +143,7 @@ resource "aws_lb_listener" "listener" {
 resource "aws_ecs_service" "servian-app-service" {
   name            = "servian-app-service"
   cluster         = "${aws_ecs_cluster.servian-app-cluster.id}"
-  task_definition = "${aws_ecs_task_definition.my_first_task.arn}"
+  task_definition = "${aws_ecs_task_definition.servian-app-task.arn}"
   launch_type     = "FARGATE"
   desired_count   = 2
 
