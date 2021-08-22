@@ -138,6 +138,9 @@ resource "aws_alb" "application_load_balancer" {
 }
 
 resource "aws_security_group" "load_balancer_security_group" {
+  name          = "load_balancer_security_group"
+  description   = "security group for lb"
+  vpc_id        = "${aws_vpc.default-vpc.id}"
   ingress {
     from_port   = 80
     to_port     = 80
