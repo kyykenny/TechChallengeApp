@@ -5,7 +5,7 @@ pipeline {
         stage('Log into AWS ECR') {
             steps {
                 script {
-                    sh "aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 796714792116.dkr.ecr.ap-southeast-2.amazonaws.com"
+                    sh "aws ecr get-login-password --region ap-southeast-2 | sudo docker login --username AWS --password-stdin 796714792116.dkr.ecr.ap-southeast-2.amazonaws.com"
                 } 
             }
         }
@@ -13,7 +13,7 @@ pipeline {
         stage('Build image') {
             steps{
                 script {
-                    sh "docker build -t servian-app-ecr-repo ."
+                    sh "sudo docker build -t servian-app-ecr-repo ."
                 }
             }
         }
@@ -21,7 +21,7 @@ pipeline {
         stage('Tag image'){
             steps{
                 script{
-                    sh "docker tag servian-app-ecr-repo:latest 796714792116.dkr.ecr.ap-southeast-2.amazonaws.com/servian-app-ecr-repo:latest"
+                    sh "sudo docker tag servian-app-ecr-repo:latest 796714792116.dkr.ecr.ap-southeast-2.amazonaws.com/servian-app-ecr-repo:latest"
                 }
             }
         }
@@ -29,7 +29,7 @@ pipeline {
         stage('Pushing to ECR') {
             steps{  
                 script {
-                    sh "docker push 796714792116.dkr.ecr.ap-southeast-2.amazonaws.com/servian-app-ecr-repo:latest"
+                    sh "sudo docker push 796714792116.dkr.ecr.ap-southeast-2.amazonaws.com/servian-app-ecr-repo:latest"
                 }
             }
         }
