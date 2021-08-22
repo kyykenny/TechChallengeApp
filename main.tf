@@ -2,16 +2,14 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.27"
+      version = "~> 3.0"
     }
   }
 }
 
 provider "aws" {
-  profile = "default"
-  aws_access_key_id = "AKIA3S77G6S2KFH2ARVX"
-  aws_secret_access_key = "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"
   region = "ap-southeast-2"
+  profile = "jenkins"
 }
 
 resource "aws_vpc" "default-vpc" {
